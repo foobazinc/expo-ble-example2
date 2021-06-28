@@ -1,4 +1,8 @@
+import { Device } from 'react-native-ble-plx'
+
 export interface IDevice {
+  id: string
   name: string
-  uuid: string
+  isUnlock: boolean
+  deviceClient: Device | null
 }

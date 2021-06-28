@@ -9,8 +9,18 @@ type Props = {
 
 export default function Device({ device }: Props) {
   const onPress = () => {
-    // TODO: デバイスとの通信処理を実装
     console.log(device.name)
+    // TODO: デバイスとの通信処理を実装
+    device.deviceClient?.connect()
+      .then((deviceClient) => {
+        return deviceClient.discoverAllServicesAndCharacteristics()
+      })
+      .then((deviceClient) => {
+        // Do work on device with services and characteristics
+      })
+      .catch((error) => {
+        // Handle errors
+      })
   }
   return (
     <View style={styles.container}>
@@ -18,8 +28,8 @@ export default function Device({ device }: Props) {
         <Text style={styles.name}>
           {device.name}
         </Text>
-        <Text style={styles.uuid}>
-          {device.uuid}
+        <Text style={styles.status}>
+          {device.isUnlock ? '解錠中' : '施錠中'}
         </Text>
       </View>
       <View style={styles.body}>
@@ -54,7 +64,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333',
   },
-  uuid: {
+  status: {
     fontSize: 16,
     fontWeight: 'normal',
     color: '#999',

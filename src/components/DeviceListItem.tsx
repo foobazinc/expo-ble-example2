@@ -16,7 +16,7 @@ export default function DeviceListItem({ device }: Props) {
     <ListItem bottomDivider onPress={onPress}>
       <ListItem.Content>
         <ListItem.Title style={styles.name}>{device.name}</ListItem.Title>
-        <ListItem.Subtitle style={styles.uuid}>{device.uuid}</ListItem.Subtitle>
+        <ListItem.Subtitle style={styles.status}>RSSI: {device.deviceClient?.rssi}dBm</ListItem.Subtitle>
       </ListItem.Content>
       <ListItem.Chevron />
     </ListItem>
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333',
   },
-  uuid: {
+  status: {
     fontSize: 14,
     fontWeight: 'normal',
     color: '#999',
