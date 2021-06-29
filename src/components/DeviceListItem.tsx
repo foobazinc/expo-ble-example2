@@ -16,7 +16,9 @@ export default function DeviceListItem({ device }: Props) {
     <ListItem bottomDivider onPress={onPress}>
       <ListItem.Content>
         <ListItem.Title style={styles.name}>{device.name}</ListItem.Title>
-        <ListItem.Subtitle style={styles.status}>RSSI: {device.deviceClient?.rssi}dBm</ListItem.Subtitle>
+        <ListItem.Subtitle style={styles.status}>
+          RSSI: {device.deviceClient?.rssi ? `${device.deviceClient?.rssi}dBm` : '未検出'}
+        </ListItem.Subtitle>
       </ListItem.Content>
       <ListItem.Chevron />
     </ListItem>

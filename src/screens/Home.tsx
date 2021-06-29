@@ -6,32 +6,41 @@ import DeviceListItem from '../components/DeviceListItem'
 
 const initialDevices: IDevice[] = [
   {
-    id: 'uuid1',
+    id: '4ffe62bc-bac2-3703-be4c-e03fb2eca028',
     name: '会議室1',
     isUnlock: false,
     deviceClient: null,
+    characteristicUuid: 'd2ccfe02-463f-9980-5f41-65c267515c37',
   },
   {
-    id: 'uuid2',
+    id: '76c53cea-e2ac-b88e-bd56-c51a3876b156',
     name: 'B棟倉庫',
     isUnlock: true,
     deviceClient: null,
+    characteristicUuid: 'd2ccfe02-463f-9980-5f41-65c267515c37',
+  },
+  {
+    id: 'e54b3f6e-5354-3912-9899-2e0daa6bc88d',
+    name: 'yudai524-mbp13',
+    isUnlock: true,
+    deviceClient: null,
+    characteristicUuid: 'd2ccfe02-463f-9980-5f41-65c267515c37',
   },
 ]
 
 export default function Home() {
-  // 実際には API からデバイス一覧を取得
+  // 実際には API からデバイス一覧を取得するが、検証用なのでハードコードしたものを渡す
   const [devices, setDevices] = useState(initialDevices)
+  const uuids = initialDevices.map(d => d.id)
 
-  const scanAndConnect = () => {
-    manager.startDeviceScan(null, null, (error, device) => {
+  // 周辺のデバイスをスキャンして、API から取得したデバイスと合致するものがあれば情報を state に格納
+  const scan = () => {
+    manager.startDeviceScan(uuids, null, (error, device) => {
       if (error) {
-        // Handle error (scanning will be stopped automatically)
+        console.error(error)
         return
       }
 
-      // Check if it is a device you are looking for based on advertisement data
-      // or other criteria.
       const isMyDevice = devices.some(d => d.name === device.name)
       if (isMyDevice) {
         const newDevices = devices.map(d => {
@@ -41,41 +50,17 @@ export default function Home() {
               deviceClient: device,
             }
           }
+
+          return d
         })
         setDevices(newDevices)
-
-        // Stop scanning as it's not necessary if you are scanning for one device.
-        // manager.stopDeviceScan();
-
-        // 接続は詳細ページで
-        // Proceed with connection.
-        // device.connect()
-        //   .then((device) => {
-        //     return device.discoverAllServicesAndCharacteristics()
-        //   })
-        //   .then((device) => {
-        //     // Do work on device with services and characteristics
-        //   })
-        //   .catch((error) => {
-        //     // Handle errors
-        //   });
       }
-    });
+    })
   }
 
   useEffect(() => {
-    // TODO: 初期化時にデバイスリストを取得
-    manager.onStateChange((state) => {
-      const subscription = manager.onStateChange((state) => {
-        if (state === 'PoweredOn') {
-          // TODO: ライブラリの実装によっては3秒に1回再スキャンとかしてもよさそう
-          scanAndConnect();
-          subscription.remove();
-        }
-      }, true);
-      return () => subscription.remove();
-    });
-  }, [])
+    scan()
+  }, [manager])
 
   return (
     <SafeAreaView style={styles.container}>
@@ -93,7 +78,5 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f4f4f4',
   },
-  scrollViewContentContainer: {
-    // minHeight: '100%',
-  },
+  scrollViewContentContainer: {},
 })

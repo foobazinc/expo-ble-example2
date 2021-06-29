@@ -5,4 +5,5 @@ export interface IDevice {
   name: string
   isUnlock: boolean
   deviceClient: Device | null
+  characteristicUuid: string
 }
